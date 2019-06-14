@@ -13,7 +13,8 @@ BINNAME="terraform-$TFVER"
 BASEURL=https://releases.hashicorp.com/terraform/$TFVER
 TMP="/tmp"
 
-if [ -z $TFVER ] ; then 
+# TFVER is required
+if [ -z $TFVER ] || [ $TFVER == '-h' ]; then 
  echo Usage: chtf 0.12.2
  exit 1
 fi
@@ -39,6 +40,7 @@ if [ ! -f $BINPATH/$BINNAME ]; then
       CHECK=$(curl -s $BASEURL/terraform_$TFVER\_SHA256SUMS | grep $ZIP)
     else
       echo ERROR: Check version $TFVER exists at $BASEURL
+      rm $ZIP
       exit 1
     fi
 
