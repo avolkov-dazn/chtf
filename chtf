@@ -39,7 +39,7 @@ if [ ! -f $BINPATH/$BINNAME ]; then
       SUM=$(sha256sum $ZIP)
       CHECK=$(curl -s $BASEURL/terraform_$TFVER\_SHA256SUMS | grep $ZIP)
     else
-      echo ERROR: Check version $TFVER exists at $BASEURL
+      echo ERROR: Check version $TFVER exists at https://releases.hashicorp.com/terraform
       rm $ZIP
       exit 1
     fi
