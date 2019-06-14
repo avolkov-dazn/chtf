@@ -1,0 +1,59 @@
+#!/bin/bash
+#title           :chtf
+#description     :Download and manage multiple versions of terraform
+#author		       :avolkov
+#date            :20190614
+#version         :0.1    
+#usage		       :chtf 0.12.2
+#notes           :Requires curl. Tested on linux
+
+TFVER=$1
+BINPATH="/usr/local/bin"
+BINNAME="terraform-$TFVER"
+BASEURL=https://releases.hashicorp.com/terraform/$TFVER
+TMP="/tmp"
+
+if [ -z $TFVER ] ; then 
+ echo Usage: chtf 0.12.2
+ exit 1
+fi
+
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+  ZIP=terraform\_$TFVER\_linux_amd64.zip
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  ZIP=terraform\_$TFVER\_darwin_amd64.zip
+else
+  echo ERROR: This script doesn\'t support $OSTYPE
+  exit 1
+fi
+
+# Check and/or download from Hashicorp
+if [ ! -f $BINPATH/$BINNAME ]; then
+  cd $TMP
+
+  # Check if it had already been downloaded
+  if [ ! -f $ZIP ]; then
+    echo "Downloading $BASEURL/$ZIP"
+    curl -s $BASEURL\/$ZIP > $ZIP
+    SUM=$(sha256sum $ZIP)
+    CHECK=$(curl -s $BASEURL/terraform_$TFVER\_SHA256SUMS | grep $ZIP)
+
+    # Verify checksum
+    if [[ $SUM == $CHECK ]]; then
+      echo "Sum verified"
+    else
+      echo ERROR: sha256sum mismatch - aborting
+      exit 1
+    fi
+  fi
+
+  echo "Unwrapping binary"
+  unzip $ZIP
+  sudo cp terraform $BINPATH/$BINNAME
+  rm $ZIP terraform
+fi
+
+# Manage current version
+sudo rm -rf $BINPATH/terraform
+sudo ln -s $BINPATH/$BINNAME $BINPATH/terraform
+echo $(terraform -v | head -n 1) "is good to go"
