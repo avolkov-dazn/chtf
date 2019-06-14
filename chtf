@@ -1,10 +1,10 @@
 #!/bin/bash
 #title           :chtf
 #description     :Download and manage multiple versions of terraform
-#author		       :avolkov
+#author          :avolkov
 #date            :20190614
-#version         :0.1    
-#usage		       :chtf 0.12.2
+#version         :0.1
+#usage           :chtf 0.12.2
 #notes           :Requires curl. Tested on linux
 
 TFVER=$1
@@ -34,9 +34,13 @@ if [ ! -f $BINPATH/$BINNAME ]; then
   # Check if it had already been downloaded
   if [ ! -f $ZIP ]; then
     echo "Downloading $BASEURL/$ZIP"
-    curl -s $BASEURL\/$ZIP > $ZIP
-    SUM=$(sha256sum $ZIP)
-    CHECK=$(curl -s $BASEURL/terraform_$TFVER\_SHA256SUMS | grep $ZIP)
+    if curl --fail $BASEURL\/$ZIP > $ZIP; then
+      SUM=$(sha256sum $ZIP)
+      CHECK=$(curl -s $BASEURL/terraform_$TFVER\_SHA256SUMS | grep $ZIP)
+    else
+      echo ERROR: Check version $TFVER exists at $BASEURL
+      exit 1
+    fi
 
     # Verify checksum
     if [[ $SUM == $CHECK ]]; then
