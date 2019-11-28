@@ -4,13 +4,13 @@ Install and manage multiple versions of [Hashicorp terraform](https://www.terraf
 ## Installation
 Copy script to a directory in your `$PATH`, i.e. `/usr/local/bin`. Set permissions to allow execution:
 ```bash
-sudo cp chtf /usr/local/bin/
+sudo curl -o /usr/local/bin/chtf https://raw.githubusercontent.com/avolkov-dazn/chtf/master/chtf
 chmod 0755 /usr/local/bin/chtf
 ```
 Test by executing *chtf* in your favourite terminal emulator. You should see usage example come up:
 ```bash
 $ chtf
-Usage: chtf 0.12.2
+Usage: chtf <version, i.e. 0.12.2>
 ```
 
 ## Usage
@@ -22,7 +22,7 @@ You should see a confirmation of the version installed when the process is finis
 ```bash
 $ chtf 0.12.2
 [sudo] password for user:
-Terraform v0.12.2 is good to go
+Terraform v0.12.2 - good to go
 ```
 
 Sudo is required to operate on `/usr/local/bin/`.
