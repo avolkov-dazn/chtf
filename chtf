@@ -15,7 +15,7 @@ TMP="/tmp"
 
 # TFVER is required
 if [ -z $TFVER ] || [ $TFVER == '-h' ]; then 
- echo Usage: chtf 0.12.2
+ echo Usage: chtf \<version, i.e. 0.12.2\>
  exit 1
 fi
 
@@ -62,4 +62,4 @@ fi
 # Manage current version
 sudo rm -rf $BINPATH/terraform
 sudo ln -s $BINPATH/$BINNAME $BINPATH/terraform
-echo $(terraform -v | head -n 1) "is good to go"
+echo $(terraform -v | head -n 1) "- good to go"
